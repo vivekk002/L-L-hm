@@ -80,12 +80,13 @@ router.post(
         process.env.JWT_SECRET_KEY as string,
         {
           expiresIn: "1d",
-        }
+        },
       );
 
       // Return JWT token in response body for localStorage storage
       res.status(200).json({
         userId: user._id,
+        role: user.role, // Include role
         message: "Login successful",
         token: token, // JWT token in response body
         user: {
@@ -93,13 +94,14 @@ router.post(
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
+          role: user.role, // Include role in user object too
         },
       });
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: "Something went wrong" });
     }
-  }
+  },
 );
 
 /**
@@ -122,12 +124,27 @@ router.post(
  *                 userId:
  *                   type: string
  *                   description: User ID
+ *                 role:
+ *                   type: string
+ *                   description: User Role
  *       401:
  *         description: Token is invalid or expired
  */
-router.get("/validate-token", verifyToken, (req: Request, res: Response) => {
-  res.status(200).send({ userId: req.userId });
-});
+router.get(
+  "/validate-token",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    try {
+      const user = await User.findById(req.userId);
+      if (!user) {
+        return res.status(401).send({ message: "User not found" });
+      }
+      res.status(200).send({ userId: req.userId, role: user.role });
+    } catch (error) {
+      res.status(500).send({ message: "Error validating token" });
+    }
+  },
+);
 
 /**
  * @swagger

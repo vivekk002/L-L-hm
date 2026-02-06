@@ -16,6 +16,7 @@ type ToastMessage = {
 export type AppContext = {
   showToast: (toastMessage: ToastMessage) => void;
   isLoggedIn: boolean;
+  role?: string; // Add role to context
   stripePromise: Promise<Stripe | null>;
   showGlobalLoading: (message?: string) => void;
   hideGlobalLoading: () => void;
@@ -24,7 +25,7 @@ export type AppContext = {
 };
 
 export const AppContext = React.createContext<AppContext | undefined>(
-  undefined
+  undefined,
 );
 
 const stripePromise = loadStripe(STRIPE_PUB_KEY);
@@ -36,7 +37,7 @@ export const AppContextProvider = ({
 }) => {
   const [isGlobalLoading, setIsGlobalLoading] = useState(false);
   const [globalLoadingMessage, setGlobalLoadingMessage] = useState(
-    "Hotel room is getting ready..."
+    "Hotel room is getting ready...",
   );
   const { toast } = useToast();
 
@@ -63,7 +64,7 @@ export const AppContextProvider = ({
     {
       retry: false,
       refetchOnWindowFocus: false, // Don't refetch on focus
-      staleTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: 0, // Always refetch to get updated role
       // Always enabled - let validateToken handle missing tokens
       enabled: true,
       // Add fallback for JWT authentication
@@ -74,7 +75,7 @@ export const AppContextProvider = ({
 
         if (storedToken && error.response?.status === 401) {
           console.log(
-            "JWT token found but validation failed - possible token expiration"
+            "JWT token found but validation failed - possible token expiration",
           );
 
           // If we also have a user ID, we can be more confident it's a valid session
@@ -83,7 +84,7 @@ export const AppContextProvider = ({
           }
         }
       },
-    }
+    },
   );
 
   // Debug logging to understand the state
@@ -112,7 +113,7 @@ export const AppContextProvider = ({
 
     if (isFallback) {
       console.log(
-        "JWT fallback mode detected - using localStorage authentication"
+        "JWT fallback mode detected - using localStorage authentication",
       );
     }
 
@@ -121,11 +122,16 @@ export const AppContextProvider = ({
 
   const finalIsLoggedIn = isLoggedIn || justLoggedIn || isJWTFallback();
 
+  // Extract role from data if available
+  const role = data?.role;
+
   console.log(
     "Final isLoggedIn:",
     finalIsLoggedIn,
+    "Role:",
+    role,
     "JWT Fallback:",
-    isJWTFallback()
+    isJWTFallback(),
   );
 
   const showToast = (toastMessage: ToastMessage) => {
@@ -133,8 +139,8 @@ export const AppContextProvider = ({
       toastMessage.type === "SUCCESS"
         ? "success"
         : toastMessage.type === "ERROR"
-        ? "destructive"
-        : "info";
+          ? "destructive"
+          : "info";
 
     toast({
       variant,
@@ -159,6 +165,7 @@ export const AppContextProvider = ({
       value={{
         showToast,
         isLoggedIn: finalIsLoggedIn,
+        role, // Pass role to context
         stripePromise,
         showGlobalLoading,
         hideGlobalLoading,

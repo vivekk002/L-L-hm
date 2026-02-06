@@ -24,7 +24,7 @@ import ApiStatus from "./pages/ApiStatus";
 import AnalyticsDashboard from "./pages/AnalyticsDashboard";
 
 const App = () => {
-  const { isLoggedIn } = useAppContext();
+  const { isLoggedIn, role } = useAppContext();
   return (
     <Router>
       <ScrollToTop />
@@ -105,30 +105,35 @@ const App = () => {
               }
             />
 
-            <Route
-              path="/add-hotel"
-              element={
-                <Layout>
-                  <AddHotel />
-                </Layout>
-              }
-            />
-            <Route
-              path="/edit-hotel/:hotelId"
-              element={
-                <Layout>
-                  <EditHotel />
-                </Layout>
-              }
-            />
-            <Route
-              path="/my-hotels"
-              element={
-                <Layout>
-                  <MyHotels />
-                </Layout>
-              }
-            />
+            {(role === "admin" || role === "hotel_owner") && (
+              <>
+                <Route
+                  path="/add-hotel"
+                  element={
+                    <Layout>
+                      <AddHotel />
+                    </Layout>
+                  }
+                />
+                <Route
+                  path="/edit-hotel/:hotelId"
+                  element={
+                    <Layout>
+                      <EditHotel />
+                    </Layout>
+                  }
+                />
+                <Route
+                  path="/my-hotels"
+                  element={
+                    <Layout>
+                      <MyHotels />
+                    </Layout>
+                  }
+                />
+              </>
+            )}
+
             <Route
               path="/my-bookings"
               element={
