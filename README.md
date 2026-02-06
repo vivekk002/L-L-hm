@@ -239,7 +239,7 @@ lodgelogic/
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/lodgelogic.git
+git clone https://github.com/your-username/L-L-hm.git
 cd lodgelogic
 ```
 
