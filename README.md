@@ -287,6 +287,22 @@ npm run dev
 - **Backend API**: <http://localhost:7002>
 - **API Documentation**: <http://localhost:7002/api-docs>
 
+### Step 6: Role Management (Admin Access) 👑
+
+By default, new users are registered with the `user` role. To access admin features (like **Adding Hotels**, **My Hotels**), you must manually promote a user to `admin` or `hotel_owner`.
+
+**Option 1: Using the Helper Script**
+We have provided a script to easily promote users:
+
+```bash
+cd lodgelogic-backend
+npx ts-node scripts/promoteUser.ts <your-email> admin
+# Example: npx ts-node scripts/promoteUser.ts test@example.com admin
+```
+
+**Option 2: Manual Database Update**
+You can also manually update the `role` field in your MongoDB `users` collection to `"admin"` or `"hotel_owner"`.
+
 ---
 
 ## 🔧 Environment Variables

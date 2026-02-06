@@ -2,20 +2,13 @@ import { Link, useNavigate } from "react-router-dom";
 import useAppContext from "../hooks/useAppContext";
 import useSearchContext from "../hooks/useSearchContext";
 import SignOutButton from "./SignOutButton";
-import {
-  FileText,
-  Activity,
-  BarChart3,
-  Building2,
-  Calendar,
-  LogIn,
-} from "lucide-react";
+import { BarChart3, Building2, Calendar, LogIn } from "lucide-react";
 
 const Header = () => {
   const { isLoggedIn } = useAppContext();
   const search = useSearchContext();
   const navigate = useNavigate();
-
+  const { role } = useAppContext();
   const handleLogoClick = () => {
     // Clear search context when going to home page
     search.clearSearchValues();
@@ -67,31 +60,15 @@ const Header = () => {
                     <Calendar className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
                     My Bookings
                   </Link>
-                  <Link
-                    className="flex items-center text-white/90 hover:text-white px-4 py-2 rounded-lg font-medium hover:bg-white/10 transition-all duration-200 group"
-                    to="/my-hotels"
-                  >
-                    <Building2 className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
-                    My Hotels
-                  </Link>
-
-                  {/* API Documentation Link */}
-                  <Link
-                    className="flex items-center text-white/90 hover:text-white px-4 py-2 rounded-lg font-medium hover:bg-white/10 transition-all duration-200 group"
-                    to="/api-docs"
-                  >
-                    <FileText className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
-                    API Docs
-                  </Link>
-
-                  {/* API Status Link */}
-                  <Link
-                    className="flex items-center text-white/90 hover:text-white px-4 py-2 rounded-lg font-medium hover:bg-white/10 transition-all duration-200 group"
-                    to="/api-status"
-                  >
-                    <Activity className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
-                    API Status
-                  </Link>
+                  {role === "admin" && (
+                    <Link
+                      className="flex items-center text-white/90 hover:text-white px-4 py-2 rounded-lg font-medium hover:bg-white/10 transition-all duration-200 group"
+                      to="/my-hotels"
+                    >
+                      <Building2 className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
+                      My Hotels
+                    </Link>
+                  )}
 
                   <SignOutButton />
                 </>

@@ -19,8 +19,7 @@ import Detail from "./pages/Detail";
 import Booking from "./pages/Booking";
 import MyBookings from "./pages/MyBookings";
 import Home from "./pages/Home";
-import ApiDocs from "./pages/ApiDocs";
-import ApiStatus from "./pages/ApiStatus";
+
 import AnalyticsDashboard from "./pages/AnalyticsDashboard";
 
 const App = () => {
@@ -53,22 +52,7 @@ const App = () => {
             </Layout>
           }
         />
-        <Route
-          path="/api-docs"
-          element={
-            <Layout>
-              <ApiDocs />
-            </Layout>
-          }
-        />
-        <Route
-          path="/api-status"
-          element={
-            <Layout>
-              <ApiStatus />
-            </Layout>
-          }
-        />
+
         <Route
           path="/analytics"
           element={
